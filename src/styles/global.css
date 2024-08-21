@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Kanit', sans-serif;
+}
+
+/* Minimal scrollbar for the ul element */
+.minimal-scrollbar::-webkit-scrollbar {
+  height: 4px; /* Smaller height for a minimal look */
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Light gray thumb for subtle appearance */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3); /* Slightly darker on hover */
+}
+
+.minimal-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent track */
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}

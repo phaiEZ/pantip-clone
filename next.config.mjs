@@ -27,12 +27,14 @@ export default withSentryConfig(
       experimental: {
         serverComponentsExternalPackages: ['@electric-sql/pglite'],
       },
+      images: {
+        domains: ['mdbcdn.b-cdn.net'],
+      },
     }),
   ),
   {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options
-    // FIXME: Add your Sentry organization and project names
     org: 'nextjs-boilerplate-org',
     project: 'nextjs-boilerplate',
 

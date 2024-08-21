@@ -1,98 +1,115 @@
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+'use client';
 
-import { Sponsors } from '@/components/Sponsors';
+import { useEffect, useState } from 'react';
 
-export async function generateMetadata(props: { params: { locale: string } }) {
-  const t = await getTranslations({
-    locale: props.params.locale,
-    namespace: 'Index',
-  });
+import Announcement from '@/components/Announce';
+import HighlightCarousel from '@/components/HighlightCarousel';
+import RecommendedRoom from '@/components/RecommendRoom';
+import RoomList from '@/components/RoomList';
 
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
-}
+export default function Index() {
+  const [announcement, setAnnouncement] = useState([]);
+  const [highlight, setHighlight] = useState([]);
+  const [roomList, setRoomList] = useState([]);
+  const [recommendRoom, setRecommendRoom] = useState([]);
 
-export default function Index(props: { params: { locale: string } }) {
-  unstable_setRequestLocale(props.params.locale);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://pantip.com/api/forum-service/forum/get_announce?room=homepage&limit=3', {
+          method: 'GET',
+          headers: {
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        await setAnnouncement(result.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://pantip.com/api/forum-service/home/get_room_recommend?tracking_code=%7Bsacpjz1ewqgGrD0XqPvYx%7D', {
+          method: 'GET',
+          headers: {
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        await setRoomList(result.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://pantip.com/api/forum-service/home/get_highlight', {
+          method: 'GET',
+          headers: {
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        await setHighlight(result.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://pantip.com/api/forum-service/home/get_suggest_topic_behavior?tracking_code=sacpjz1ewqgGrD0XqPvYx', {
+          method: 'GET',
+          headers: {
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        await setRecommendRoom(result.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <>
-      <p>
-        {`Looking for a SaaS Boilerplate? `}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://nextjs-boilerplate.com/pro-saas-starter-kit"
-        >
-          Next.js Boilerplate SaaS
-        </a>
-        {` can help you build one.`}
-      </p>
-      <p>
-        {`Follow `}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://twitter.com/ixartz"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          @Ixartz on Twitter
-        </a>
-        {` for updates and more information about the boilerplate.`}
-      </p>
-      <p>
-        Our sponsors&apos; exceptional support has made this project possible.
-        Their services integrate seamlessly with the boilerplate, and we
-        recommend trying them out.
-      </p>
-      <h2 className="mt-5 text-2xl font-bold">Sponsors</h2>
-      <Sponsors />
-      <h2 className="mt-5 text-2xl font-bold">
-        Boilerplate Code for Your Next.js Project with Tailwind CSS
-      </h2>
-      <p className="text-base">
-        <span role="img" aria-label="rocket">
-          🚀
-        </span>
-        {' '}
-        Next.js Boilerplate is a developer-friendly starter code for Next.js
-        projects, built with Tailwind CSS, and TypeScript.
-        {' '}
-        <span role="img" aria-label="zap">
-          ⚡️
-        </span>
-        {' '}
-        Made with developer experience first: Next.js, TypeScript, ESLint,
-        Prettier, Husky, Lint-Staged, Jest (replaced by Vitest), Testing
-        Library, Commitlint, VSCode, PostCSS, Tailwind CSS, Authentication with
-        {' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://clerk.com?utm_source=github&amp;utm_medium=sponsorship&amp;utm_campaign=nextjs-boilerplate"
-        >
-          Clerk
-        </a>
-        , Database with DrizzleORM (PostgreSQL, SQLite, and MySQL), Error
-        Monitoring with
-        {' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://sentry.io/for/nextjs/?utm_source=github&amp;utm_medium=paid-community&amp;utm_campaign=general-fy25q1-nextjs&amp;utm_content=github-banner-nextjsboilerplate-logo"
-        >
-          Sentry
-        </a>
-        , Logging with Pino.js and Log Management with
-        {' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://betterstack.com/?utm_source=github&amp;utm_medium=sponsorship&amp;utm_campaign=next-js-boilerplate"
-        >
-          Better Stack
-        </a>
-        , Monitoring as Code with Checkly, Storybook, Multi-language (i18n), and
-        more.
-      </p>
-    </>
+    <div className="flex flex-col">
+      <Announcement announcements={announcement} />
+      <RoomList data={roomList} />
+      <HighlightCarousel data={highlight} />
+      {recommendRoom.length > 0 && recommendRoom.map((room, index) => (
+        <RecommendedRoom key={index} room={room} />
+      ))}
+
+    </div>
   );
 }

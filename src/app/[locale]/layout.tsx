@@ -1,36 +1,9 @@
 import '@/styles/global.css';
 
-import type { Metadata } from 'next';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { unstable_setRequestLocale } from 'next-intl/server';
 
-import { DemoBadge } from '@/components/DemoBadge';
+import Footer from '@/components/Footer';
 import { AppConfig } from '@/utils/AppConfig';
-
-export const metadata: Metadata = {
-  icons: [
-    {
-      rel: 'apple-touch-icon',
-      url: '/apple-touch-icon.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      url: '/favicon-32x32.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '16x16',
-      url: '/favicon-16x16.png',
-    },
-    {
-      rel: 'icon',
-      url: '/favicon.ico',
-    },
-  ],
-};
 
 export function generateStaticParams() {
   return AppConfig.locales.map(locale => ({ locale }));
@@ -42,20 +15,16 @@ export default function RootLayout(props: {
 }) {
   unstable_setRequestLocale(props.params.locale);
 
-  // Using internationalization in Client Components
-  const messages = useMessages();
-
   return (
     <html lang={props.params.locale}>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
       <body>
-        <NextIntlClientProvider
-          locale={props.params.locale}
-          messages={messages}
-        >
-          {props.children}
+        {props.children}
+        <Footer></Footer>
 
-          <DemoBadge />
-        </NextIntlClientProvider>
       </body>
     </html>
   );
